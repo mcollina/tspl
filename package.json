@@ -2,9 +2,10 @@
   "name": "tspl",
   "version": "0.0.1",
   "description": "Count the number of assertions for node:test",
-  "main": "index.js",
+  "main": "tspl.js",
+  "types": "tspl.d.ts",
   "scripts": {
-    "test": "standard && node --test test.js"
+    "test": "standard && node --test test.js && tsd tspl.d.test.ts"
   },
   "keywords": [
     "node:test",
@@ -18,6 +19,10 @@
   },
   "license": "MIT",
   "dependencies": {
-    "standard": "^17.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.4.2",
+    "standard": "^17.1.0",
+    "tsd": "^0.28.1"
   }
 }

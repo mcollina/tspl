@@ -7,7 +7,7 @@ const tspl = require('.')
 test('simple test plan', async (t) => {
   const { strictEqual, end } = tspl(t)
   strictEqual(1, 1)
-  await end()
+  end()
 })
 
 test('simple test plan failing', async (t) => {
@@ -27,12 +27,12 @@ test('simple test plan with counter', async (t) => {
   const { strictEqual, end } = tspl(t, { plan: 2 })
   strictEqual(1, 1)
   strictEqual(1, 1)
-  await end()
+  end()
 })
 
 test('simple test plan with counter failing', async (t) => {
   const { end } = tspl(t, { plan: 2 })
-  await assert.rejects(end, new assert.AssertionError({
+  assert.throws(end, new assert.AssertionError({
     message: 'The plan was not completed',
     operator: 'strictEqual',
     expected: 2,

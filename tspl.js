@@ -51,3 +51,5 @@ function tspl (t, opts = {}) {
 }
 
 module.exports = tspl
+module.exports.default = tspl
+module.exports.tspl = tspl
