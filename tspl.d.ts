@@ -13,6 +13,6 @@ export type Plan = Omit<typeof assert, 'CallTracker' | 'AssertionError' | 'stric
   end: () => void
 }
 
-export declare function testplan (context: TextContext, opts?: Options): Plan;
+export declare function tspl (context: TextContext, opts?: Options): Plan;
 
-export default testplan;
+export default tspl;

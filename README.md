@@ -1,4 +1,4 @@
-# testplan
+# tspl
 
 Test Planner for [`node:test`](https://nodejs.org/api/test.html)
 and [`node:assert`](https://nodejs.org/api/assert.html).
@@ -8,7 +8,7 @@ or the test plan was not completed.
 ## Install
 
 ```bash
-npm i testplan
+npm i tspl
 ```
 
 (You'll also need `@types/node`)
@@ -17,10 +17,10 @@ npm i testplan
 
 ```js
 import test from 'node:test'
-import testplan from 'testplan'
+import { tspl, Plan } from 'tspl'
 
 test('tspl', (t) => {
-  const { strictEqual } = testplan(t, { plan: 1 })
+  const { strictEqual } = tspl(t, { plan: 1 })
   p.strictEqual(1, 1)
 })
 ```
@@ -29,7 +29,7 @@ test('tspl', (t) => {
 
 ```typescript
 import test from 'node:test';
-import { testplan, Plan } from 'testplan';
+import { tspl, Plan } from 'tspl';
 
 test('tspl', (t) => {
   const p: Plan = tspl(t, { plan: 1 });
@@ -39,7 +39,7 @@ test('tspl', (t) => {
 
 ## API
 
-### __`testplan(t: TestContext, options): Plan`__
+### __`tspl(t: TestContext, options): Plan`__
 
 Create a plan for the current test.
 

@@ -2,17 +2,17 @@
 
 const test = require('node:test')
 const assert = require('node:assert')
-const testplan = require('.')
+const tspl = require('.')
 
 test('simple test plan', async (t) => {
-  const { strictEqual, end } = testplan(t)
+  const { strictEqual, end } = tspl(t)
   strictEqual(1, 1)
   end()
 })
 
 test('simple test plan failing', async (t) => {
   let _fn
-  testplan({
+  tspl({
     after (fn) {
       _fn = fn
     }
@@ -24,14 +24,14 @@ test('simple test plan failing', async (t) => {
 })
 
 test('simple test plan with counter', async (t) => {
-  const { strictEqual, end } = testplan(t, { plan: 2 })
+  const { strictEqual, end } = tspl(t, { plan: 2 })
   strictEqual(1, 1)
   strictEqual(1, 1)
   end()
 })
 
 test('simple test plan with counter failing', async (t) => {
-  const { end } = testplan(t, { plan: 2 })
+  const { end } = tspl(t, { plan: 2 })
   assert.throws(end, new assert.AssertionError({
     message: 'The plan was not completed',
     operator: 'strictEqual',
@@ -42,7 +42,7 @@ test('simple test plan with counter failing', async (t) => {
 
 test('counter failing in after', async (t) => {
   let _fn
-  testplan({
+  tspl({
     after (fn) {
       _fn = fn
     }
@@ -59,7 +59,7 @@ test('counter failing in after', async (t) => {
 
 test('counter completed in after', async (t) => {
   let _fn
-  const { strictEqual } = testplan({
+  const { strictEqual } = tspl({
     after (fn) {
       _fn = fn
     }
@@ -75,7 +75,7 @@ test('counter completed in after', async (t) => {
 })
 
 test('wait', async (t) => {
-  const { strictEqual, completed } = testplan(t, { plan: 1 })
+  const { strictEqual, completed } = tspl(t, { plan: 1 })
 
   setImmediate(() => {
     strictEqual(1, 1)

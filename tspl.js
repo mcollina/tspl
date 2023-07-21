@@ -2,7 +2,7 @@
 
 const assert = require('node:assert')
 
-function testplan (t, opts = {}) {
+function tspl (t, opts = {}) {
   if (t) {
     t.after(autoEnd)
   }
@@ -63,6 +63,6 @@ function testplan (t, opts = {}) {
   return res
 }
 
-module.exports = testplan
-module.exports.default = testplan
-module.exports.testplan = testplan
+module.exports = tspl
+module.exports.default = tspl
+module.exports.tspl = tspl
