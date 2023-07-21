@@ -5,7 +5,7 @@
   "main": "tspl.js",
   "types": "tspl.d.ts",
   "scripts": {
-    "test": "standard && node --test test.js && tsd tspl.d.test.ts"
+    "test": "standard && node --test test.js && tsd"
   },
   "keywords": [
     "node:test",

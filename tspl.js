@@ -11,6 +11,11 @@ function tspl (t, opts = {}) {
   const { plan } = opts
   let actual = 0
 
+  let _resolve
+  const completed = new Promise((resolve) => {
+    _resolve = resolve
+  })
+
   async function autoEnd () {
     if (ended) {
       return
@@ -23,7 +28,7 @@ function tspl (t, opts = {}) {
     }
   }
 
-  async function end () {
+  function end () {
     if (ended) {
       return
     }
@@ -31,10 +36,12 @@ function tspl (t, opts = {}) {
 
     if (plan) {
       assert.strictEqual(actual, plan, 'The plan was not completed')
+      _resolve()
     }
   }
 
   const res = {
+    completed,
     end
   }
 
@@ -42,7 +49,13 @@ function tspl (t, opts = {}) {
     if (method.match(/^[a-z]/)) {
       res[method] = (...args) => {
         actual++
-        return assert[method](...args)
+        const res = assert[method](...args)
+
+        if (actual === plan) {
+          _resolve()
+        }
+
+        return res
       }
     }
   }

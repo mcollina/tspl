@@ -73,3 +73,13 @@ test('counter completed in after', async (t) => {
   // no errors
   await _fn()
 })
+
+test('wait', async (t) => {
+  const { strictEqual, completed } = tspl(t, { plan: 1 })
+
+  setImmediate(() => {
+    strictEqual(1, 1)
+  })
+
+  await completed
+})

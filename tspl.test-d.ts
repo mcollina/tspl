@@ -8,6 +8,24 @@ test('tspl', (t) => {
 
   p.strictEqual(1, 1);
 
-  p.end();
+  expectType<void>(p.end());
 });
 
+test('complete', async (t) => {
+  expectType<Plan>(tspl(t, { plan: 1 }));
+  const p: Plan = tspl(t, { plan: 1 });
+
+  setTimeout(() => {
+    p.strictEqual(1, 1);
+  });
+
+  await p.complete
+});
+
+test('tspl', (t) => {
+  const p: Plan = tspl(t);
+
+  p.strictEqual(1, 1);
+
+  expectType<void>(p.end());
+});
