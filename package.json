@@ -1,9 +1,9 @@
 {
-  "name": "tspl",
+  "name": "testplan",
   "version": "0.1.0",
   "description": "Count the number of assertions for node:test",
-  "main": "tspl.js",
-  "types": "tspl.d.ts",
+  "main": "testplan.js",
+  "types": "testplan.d.ts",
   "scripts": {
     "test": "standard && node --test test.js && tsd"
   },
