@@ -8,7 +8,7 @@ or the test plan was not completed.
 ## Install
 
 ```bash
-npm i tspl
+npm i @matteo.collina/tspl
 ```
 
 (You'll also need `@types/node`)
@@ -17,7 +17,7 @@ npm i tspl
 
 ```js
 import test from 'node:test'
-import { tspl, Plan } from 'tspl'
+import { tspl, Plan } from '@matteo.collina/tspl'
 
 test('tspl', (t) => {
   const { strictEqual } = tspl(t, { plan: 1 })
@@ -29,7 +29,7 @@ test('tspl', (t) => {
 
 ```typescript
 import test from 'node:test';
-import { tspl, Plan } from 'tspl';
+import { tspl, Plan } from '@matteo.collina/tspl';
 
 test('tspl', (t) => {
   const p: Plan = tspl(t, { plan: 1 });
