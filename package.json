@@ -1,0 +1,23 @@
+{
+  "name": "tspl",
+  "version": "0.0.1",
+  "description": "Count the number of assertions for node:test",
+  "main": "index.js",
+  "scripts": {
+    "test": "standard && node --test test.js"
+  },
+  "keywords": [
+    "node:test",
+    "plan",
+    "assert"
+  ],
+  "author": "Matteo Collina <hello@matteocollina.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mcollina/tspl.git"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "standard": "^17.1.0"
+  }
+}
