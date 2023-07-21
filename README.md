@@ -17,7 +17,7 @@ npm i @matteo.collina/tspl
 
 ```js
 import test from 'node:test'
-import { tspl, Plan } from '@matteo.collina/tspl'
+import { tspl } from '@matteo.collina/tspl'
 
 test('tspl', (t) => {
   const { strictEqual } = tspl(t, { plan: 1 })
