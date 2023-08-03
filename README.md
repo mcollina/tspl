@@ -21,7 +21,7 @@ import { tspl } from '@matteo.collina/tspl'
 
 test('tspl', (t) => {
   const { strictEqual } = tspl(t, { plan: 1 })
-  p.strictEqual(1, 1)
+  strictEqual(1, 1)
 })
 ```
 
@@ -33,7 +33,7 @@ import { tspl, Plan } from '@matteo.collina/tspl';
 
 test('tspl', (t) => {
   const p: Plan = tspl(t, { plan: 1 });
-  p.strictEqual(1, 1);
+  strictEqual(1, 1);
 });
 ```
 
