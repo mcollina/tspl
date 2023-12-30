@@ -53,7 +53,7 @@ The plan includes all exports from [`node:assert`](https://nodejs.org/api/assert
 as well as:
 
 * `end()`: a function to complete the plan
-* `complete`: a promise that will resolve when the plan is completed.
+* `completed`: a promise that will resolve when the plan is completed.
 
 ## License
 
