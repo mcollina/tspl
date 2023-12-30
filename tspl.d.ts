@@ -9,7 +9,7 @@ export interface Options {
 }
 
 export type Plan = Omit<typeof assert, 'CallTracker' | 'AssertionError' | 'strict'> & {
-  complete: Promise<void>
+  completed: Promise<void>
   end: () => void
 }
 
