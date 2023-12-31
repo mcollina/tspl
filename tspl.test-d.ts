@@ -11,7 +11,7 @@ test('tspl', (t) => {
   expectType<void>(p.end());
 });
 
-test('complete', async (t) => {
+test('completed', async (t) => {
   expectType<Plan>(tspl(t, { plan: 1 }));
   const p: Plan = tspl(t, { plan: 1 });
 
@@ -19,7 +19,7 @@ test('complete', async (t) => {
     p.strictEqual(1, 1);
   });
 
-  await p.complete
+  await p.completed
 });
 
 test('tspl', (t) => {
