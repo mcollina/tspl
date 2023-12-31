@@ -1,6 +1,6 @@
 {
   "name": "@matteo.collina/tspl",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Count the number of assertions for node:test",
   "main": "tspl.js",
   "types": "tspl.d.ts",
