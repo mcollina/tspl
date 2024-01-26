@@ -16,24 +16,24 @@ npm i @matteo.collina/tspl
 ## Example
 
 ```js
-import test from 'node:test'
-import { tspl } from '@matteo.collina/tspl'
+import test from 'node:test';
+import { tspl } from '@matteo.collina/tspl';
 
 test('tspl', (t) => {
-  const { strictEqual } = tspl(t, { plan: 1 })
-  strictEqual(1, 1)
-})
+  const { strictEqual } = tspl(t, { plan: 1 });
+  strictEqual(1, 1);
+});
 ```
 
 ### Typescript
 
 ```typescript
 import test from 'node:test';
-import { tspl, Plan } from '@matteo.collina/tspl';
+import { tspl, type Plan } from '@matteo.collina/tspl';
 
 test('tspl', (t) => {
   const p: Plan = tspl(t, { plan: 1 });
-  strictEqual(1, 1);
+  p.strictEqual(1, 1);
 });
 ```
 
