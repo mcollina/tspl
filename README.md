@@ -5,10 +5,10 @@ and [`node:assert`](https://nodejs.org/api/assert.html).
 It fails your tests if the number of assertions is not met,
 or the test plan was not completed.
 
-## Install
+## Installation
 
 ```bash
-npm i @matteo.collina/tspl
+npm i @matteo.collina/tspl --save-dev
 ```
 
 (You'll also need `@types/node`)
