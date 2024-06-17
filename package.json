@@ -23,6 +23,6 @@
   "devDependencies": {
     "@types/node": "^20.4.2",
     "standard": "^17.1.0",
-    "tsd": "^0.30.0"
+    "tsd": "^0.31.1"
   }
 }
