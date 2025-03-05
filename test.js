@@ -83,3 +83,13 @@ test('wait', async (t) => {
 
   await completed
 })
+
+test('await plan', async (t) => {
+  const plan = tspl(t, { plan: 1 })
+
+  setImmediate(() => {
+    plan.strictEqual(1, 1)
+  })
+
+  await plan
+})
