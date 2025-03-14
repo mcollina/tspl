@@ -8,11 +8,11 @@ function tspl (t, opts = {}) {
   }
 
   let ended = false
-  const { plan: expectedPlan } = opts
+  const { plan } = opts
   let actual = 0
 
   let _resolve
-  const plan = new Promise((resolve) => {
+  const completed = new Promise((resolve) => {
     _resolve = resolve
   })
 
@@ -21,8 +21,8 @@ function tspl (t, opts = {}) {
       return
     }
 
-    if (expectedPlan) {
-      assert.strictEqual(actual, expectedPlan, 'The plan was not completed')
+    if (plan) {
+      assert.strictEqual(actual, plan, 'The plan was not completed')
     } else {
       assert.fail('The plan was not completed')
     }
@@ -34,19 +34,30 @@ function tspl (t, opts = {}) {
     }
     ended = true
 
-    if (expectedPlan) {
-      assert.strictEqual(actual, expectedPlan, 'The plan was not completed')
+    if (plan) {
+      assert.strictEqual(actual, plan, 'The plan was not completed')
       _resolve()
     }
   }
 
+  const res = {
+    completed,
+    end
+  }
+
+  Object.defineProperty(res, 'then', {
+    get () {
+      return completed.then.bind(completed)
+    }
+  })
+
   for (const method of Object.keys(assert)) {
     if (method.match(/^[a-z]/)) {
-      plan[method] = (...args) => {
+      res[method] = (...args) => {
         actual++
         const res = assert[method](...args)
 
-        if (actual === expectedPlan) {
+        if (actual === plan) {
           _resolve()
         }
 
@@ -55,9 +66,7 @@ function tspl (t, opts = {}) {
     }
   }
 
-  plan.end = end
-  plan.completed = plan
-  return plan
+  return res
 }
 
 module.exports = tspl
