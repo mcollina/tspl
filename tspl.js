@@ -45,6 +45,12 @@ function tspl (t, opts = {}) {
     end
   }
 
+  Object.defineProperty(res, 'then', {
+    get () {
+      return completed.then.bind(completed)
+    }
+  })
+
   for (const method of Object.keys(assert)) {
     if (method.match(/^[a-z]/)) {
       res[method] = (...args) => {
