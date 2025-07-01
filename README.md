@@ -5,6 +5,14 @@ and [`node:assert`](https://nodejs.org/api/assert.html).
 It fails your tests if the number of assertions is not met,
 or the test plan was not completed.
 
+> [!TIP]
+> Since [Node 20.15.0](https://github.com/nodejs/node/blob/main/doc/changelogs/CHANGELOG_V20.md#20.15.0) /
+> [Node 22.2.0](https://github.com/nodejs/node/blob/main/doc/changelogs/CHANGELOG_V22.md#22.2.0)
+> this functionality is baked into `node:test` itself (see 
+> [`context.plan(count)`](https://nodejs.org/api/test.html#contextplancountoptions)).
+> If you only use those versions or later, then you do not
+> need this module.
+
 ## Installation
 
 ```bash
