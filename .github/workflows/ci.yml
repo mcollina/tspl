@@ -3,17 +3,61 @@ name: ci
 on: [push, pull_request]
 
 jobs:
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+
+      - name: Install Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: '24'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run linter
+        run: npm run lint
+
+
+  typescript:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+
+      - name: Install Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: '24'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Check types
+        run: npm run test:types
+  
   test:
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
-        node-version: [18.x, 20.x, 22.x]
+        node-version: ['18', '20', '22', '24']
 
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          persist-credentials: false
 
-      - name: Use Node.js
+      - name: Install Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
@@ -24,4 +68,4 @@ jobs:
 
       - name: Run tests
         run: |
-          npm run test
+          npm run test:unit
