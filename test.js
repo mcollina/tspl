@@ -31,7 +31,7 @@ test('simple test plan with counter', async (t) => {
 })
 
 test('simple test plan with counter failing', async (t) => {
-  const { end } = tspl(t, { plan: 2 })
+  const { end } = tspl(null, { plan: 2 })
   assert.throws(end, new assert.AssertionError({
     message: 'The plan was not completed',
     operator: 'strictEqual',
