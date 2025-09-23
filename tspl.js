@@ -3,26 +3,23 @@
 const assert = require('node:assert')
 
 /**
- * @typedef {Object} Options
+ * @typedef {object} TSPLContext
+ * @property {(err?: Error) => void} end - end the test and check the plan
+ * @property {Promise<void>} completed - promise that resolves when the plan is completed
+ */
+
+/**
+ * @typedef {object} Options
  * @property {number} [plan] - number of expected assertions
  * @property {(err?: Error) => void} [done] - callback when the plan is completed
  */
 
 /** @typedef {import('node:test').TestContext} TestContext */
 /** @typedef {Omit<import('node:assert'), 'AssertionError' | 'CallTracker' | 'strict'>} AssertFns */
-
-/**
- * @typedef {object} TSPLContext
- * @property {(err?: Error) => void} end - end the test and check the plan
- * @property {Promise<void>} completed - promise that resolves when the plan is completed
- */
-
 /** @typedef {TestContext & AssertFns & TSPLContext & PromiseLike<void>} TSPLTestContext */
-
 /** @typedef {TSPLTestContext} Plan */
 
 /**
- *
  * @param {TestContext} t
  * @param {Options} [opts={}]
  * @returns {TSPLTestContext}
