@@ -22,9 +22,9 @@ function tspl (t, opts = {}) {
     }
 
     if (plan) {
-      assert.strictEqual(actual, plan, 'The plan was not completed')
+      assert.strictEqual(actual, plan, t.name ? `The plan for '${t.name}' was not completed` : 'The plan was not completed')
     } else {
-      assert.fail('The plan was not completed')
+      assert.fail(t.name ? `The plan for '${t.name}' was not completed` : 'The plan was not completed')
     }
   }
 
@@ -35,7 +35,7 @@ function tspl (t, opts = {}) {
     ended = true
 
     if (plan) {
-      assert.strictEqual(actual, plan, 'The plan was not completed')
+      assert.strictEqual(actual, plan, t.name ? `The plan for '${t.name}' was not completed` : 'The plan was not completed')
       _resolve()
     }
   }
