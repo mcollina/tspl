@@ -6,7 +6,7 @@
   "types": "tspl.d.ts",
   "scripts": {
     "build:types": "npm run delete:types && tsc --project tsconfig.types.json",
-    "delete:types": "node -e \"import { rmSync } from 'fs'; try {rmSync('./index.d.ts'); } catch {} \"",
+    "delete:types": "node -e \"import { rmSync } from 'fs'; try {rmSync('./tspl.d.ts'); } catch {} \"",
     "lint": "standard",
     "lint:fix": "standard --fix",
     "test": "npm run test:unit && npm run test:types",

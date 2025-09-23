@@ -162,3 +162,13 @@ test('use t.assert and await plan', async (t) => {
 
   await plan
 })
+
+test('it is possible to override the configure plan by calling .plan()', async (t) => {
+  t = tspl(t, { plan: 2 })
+
+  t.plan(1)
+
+  t.assert.strictEqual(1, 1)
+
+  await t.completed
+})
