@@ -25,7 +25,7 @@
   "dependencies": {
   },
   "devDependencies": {
-    "@types/node": "^20.4.2",
+    "@types/node": "^24.5.2",
     "standard": "^17.1.0",
     "tsd": "^0.30.0"
   }
