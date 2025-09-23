@@ -2,14 +2,49 @@
 
 const assert = require('node:assert')
 
+/**
+ * @typedef {object} TSPLContext
+ * @property {(err?: Error) => void} end - end the test and check the plan
+ * @property {Promise<void>} completed - promise that resolves when the plan is completed
+ */
+
+/**
+ * @typedef {object} Options
+ * @property {number} [plan] - number of expected assertions
+ * @property {boolean|number} [wait=false] - wait time in milliseconds before automatically ending the test
+ * @property {(err?: Error) => void} [done] - callback when the plan is completed
+ */
+
+/** @typedef {import('node:test').TestContext} TestContext */
+/** @typedef {Omit<import('node:assert'), 'AssertionError' | 'CallTracker' | 'strict'>} AssertFns */
+/** @typedef {TestContext & AssertFns & TSPLContext & PromiseLike<void>} TSPLTestContext */
+/** @typedef {TSPLTestContext} Plan */
+
+/**
+ * @param {TestContext} t
+ * @param {Options} [opts={}]
+ * @returns {TSPLTestContext}
+ */
 function tspl (t, opts = {}) {
   if (t) {
     t.after(autoEnd)
   }
 
   let ended = false
-  const { plan } = opts
+
+  opts.plan = opts.plan || 0
+  opts.done = opts.done || undefined
+  opts.wait = opts.wait ?? false
+
   let actual = 0
+
+  t.plan = function (n, options = {}) {
+    opts.plan = n
+    if (options.wait) {
+      opts.wait = options.wait
+    }
+    return t
+  }
 
   let _resolve
   const completed = new Promise((resolve) => {
@@ -21,8 +56,14 @@ function tspl (t, opts = {}) {
       return
     }
 
-    if (plan) {
-      assert.strictEqual(actual, plan, t.name ? `The plan for '${t.name}' was not completed` : 'The plan was not completed')
+    if (opts.wait === true) {
+      return completed
+    } else if (typeof opts.wait === 'number' && opts.wait > 0) {
+      await new Promise((resolve) => setTimeout(resolve, /** @type {number} */ (opts.wait)))
+    }
+
+    if (opts.plan) {
+      assert.strictEqual(actual, opts.plan, t.name ? `The plan for '${t.name}' was not completed` : 'The plan was not completed')
     } else {
       assert.fail(t.name ? `The plan for '${t.name}' was not completed` : 'The plan was not completed')
     }
@@ -34,39 +75,70 @@ function tspl (t, opts = {}) {
     }
     ended = true
 
-    if (plan) {
-      assert.strictEqual(actual, plan, t.name ? `The plan for '${t.name}' was not completed` : 'The plan was not completed')
+    if (opts.plan) {
+      try {
+        assert.strictEqual(actual, opts.plan, t.name ? `The plan for '${t.name}' was not completed` : 'The plan was not completed')
+        _resolve()
+        opts.done && opts.done()
+      } catch (err) {
+        _resolve()
+        if (opts.done) {
+          opts.done(err)
+        } else {
+          throw err
+        }
+      }
+    } else {
+      opts.done && opts.done()
       _resolve()
     }
   }
 
-  const res = {
-    completed,
-    end
-  }
-
-  Object.defineProperty(res, 'then', {
-    get () {
-      return completed.then.bind(completed)
+  Object.defineProperties(t, {
+    then: {
+      get () {
+        return completed.then.bind(completed)
+      }
+    },
+    end: {
+      get () {
+        return end
+      }
+    },
+    completed: {
+      get () {
+        return completed
+      }
     }
   })
 
-  for (const method of Object.keys(assert)) {
-    if (method.match(/^[a-z]/)) {
-      res[method] = (...args) => {
-        actual++
-        const res = assert[method](...args)
+  const assertTestContext = {}
 
-        if (actual === plan) {
+  for (const method of Object.keys(assert)) {
+    if (/^[a-z]/.test(method) && typeof assert[method] === 'function' && method !== 'strict') {
+      const fn = (...args) => {
+        actual++
+        const result = assert[method](...args)
+
+        if (actual === opts.plan) {
           _resolve()
         }
 
-        return res
+        return result
       }
+      assertTestContext[method] = fn
     }
   }
 
-  return res
+  Object.assign(t, assertTestContext)
+
+  Object.defineProperty(t, 'assert', {
+    get () {
+      return assertTestContext
+    }
+  })
+
+  return /** @type {TSPLTestContext} */ (/** @type {*} */(t))
 }
 
 module.exports = tspl

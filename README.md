@@ -51,9 +51,13 @@ test('tspl', (t) => {
 
 Create a plan for the current test.
 
-Here are the options:
+The options are:
 
-* `plan`: how many assertions are planned
+* `plan`: The number of assertions that are expected to run.
+* `wait`: If `true`, the plan waits indefinitely for all assertions and subtests to run.
+  If `false`, the plan performs an immediate check after the test function completes, without waiting for any pending assertions or subtests. Any assertions or subtests that complete after this check will not be counted towards the plan.
+  If a `number`, it specifies the maximum wait time in milliseconds before timing out while waiting for expected assertions and subtests to be matched. If the timeout is reached, the test will fail. **Default**: `false`.
+* `done`: an optional callback that will be called when the plan is completed.
 
 ### `Plan`
 
@@ -62,6 +66,24 @@ as well as:
 
 * `end()`: a function to complete the plan
 * `completed`: a promise that will resolve when the plan is completed.
+
+### `t.plan(count, options?)`
+
+You can also override the plan by calling `t.plan(count, options)`.
+
+If you call `t.plan()` after creating a plan with `tspl()`, the options passed to `t.plan()` will override those passed to `tspl()`.
+
+
+The options are:
+
+* `count`: The number of assertions that are expected to run.
+* `wait`: If `true`, the plan waits indefinitely for all assertions and subtests to run.
+  If `false`, the plan performs an immediate check after the test function completes, without waiting for any pending assertions or subtests. Any assertions or subtests that complete after this check will not be counted towards the plan.
+  If a `number`, it specifies the maximum wait time in milliseconds before timing out while waiting for expected assertions and subtests to be matched. If the timeout is reached, the test will fail. **Default**: `false`.
+
+### `t.assert`
+
+An object containing assertion methods bound to `context`. The top-level functions from the `node:assert` module are exposed here for the purpose of creating test plans.
 
 ## License
 
