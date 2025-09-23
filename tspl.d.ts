@@ -1,18 +1,17 @@
-import test from 'node:test'
-import assert from 'node:assert'
-
-type TestFn = Exclude<Parameters<typeof test.test>[0], undefined>
-type TextContext = Exclude<Parameters<TestFn>[0], undefined>;
-
-export interface Options {
-  plan?: number;
+export = tspl;
+declare function tspl(t: TestContext, opts?: Options): TSPLTestContext;
+declare namespace tspl {
+    export { tspl as default, tspl, Options, TestContext, Assert, TSPLTestContext, Plan };
 }
-
-export type Plan = Omit<typeof assert, 'CallTracker' | 'AssertionError' | 'strict'> & {
-  completed: Promise<void>
-  end: () => void
-}
-
-export declare function tspl (context: TextContext, opts?: Options): Plan;
-
-export default tspl;
+type Options = {
+    plan?: number;
+    done?: (err?: Error) => void;
+};
+type TestContext = import("node:test").TestContext;
+type Assert = typeof assert;
+type TSPLTestContext = TestContext & Omit<Assert, "AssertionError" | "CallTracker" | "strict"> & {
+    end: () => void;
+    completed: Promise<void>;
+};
+type Plan = TSPLTestContext;
+import assert = require("assert");

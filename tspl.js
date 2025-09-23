@@ -2,14 +2,41 @@
 
 const assert = require('node:assert')
 
+/**
+ * @typedef {Object} Options
+ * @property {number} [plan] - number of expected assertions
+ * @property {(err?: Error) => void} [done] - callback when the plan is completed
+ */
+
+/** @typedef {import('node:test').TestContext} TestContext */
+/** @typedef {import('node:assert')} Assert */
+
+/** @typedef {TestContext & Omit<Assert, 'AssertionError' | 'CallTracker' | 'strict'> & {end: () => void, completed: Promise<void>}} TSPLTestContext */
+
+/** @typedef {TSPLTestContext} Plan */
+
+/**
+ *
+ * @param {TestContext} t
+ * @param {Options} [opts={}]
+ * @returns {TSPLTestContext}
+ */
 function tspl (t, opts = {}) {
   if (t) {
     t.after(autoEnd)
   }
 
   let ended = false
-  const { plan } = opts
+  let {
+    plan,
+    done
+  } = opts
   let actual = 0
+
+  t.plan = function (n) {
+    plan = n
+    return t
+  }
 
   let _resolve
   const completed = new Promise((resolve) => {
@@ -35,38 +62,69 @@ function tspl (t, opts = {}) {
     ended = true
 
     if (plan) {
-      assert.strictEqual(actual, plan, t.name ? `The plan for '${t.name}' was not completed` : 'The plan was not completed')
+      try {
+        assert.strictEqual(actual, plan, t.name ? `The plan for '${t.name}' was not completed` : 'The plan was not completed')
+        _resolve()
+        done && done()
+      } catch (err) {
+        _resolve()
+        if (done) {
+          done(err)
+        } else {
+          throw err
+        }
+      }
+    } else {
+      done && done()
       _resolve()
     }
   }
 
-  const res = {
-    completed,
-    end
-  }
-
-  Object.defineProperty(res, 'then', {
-    get () {
-      return completed.then.bind(completed)
+  Object.defineProperties(t, {
+    then: {
+      get () {
+        return completed.then.bind(completed)
+      }
+    },
+    end: {
+      get () {
+        return end
+      }
+    },
+    completed: {
+      get () {
+        return completed
+      }
     }
   })
 
+  const assertTestContext = {}
+
   for (const method of Object.keys(assert)) {
-    if (method.match(/^[a-z]/)) {
-      res[method] = (...args) => {
+    if (/^[a-z]/.test(method) && typeof assert[method] === 'function' && method !== 'strict') {
+      const fn = (...args) => {
         actual++
-        const res = assert[method](...args)
+        const result = assert[method](...args)
 
         if (actual === plan) {
           _resolve()
         }
 
-        return res
+        return result
       }
+      assertTestContext[method] = fn
     }
   }
 
-  return res
+  Object.assign(t, assertTestContext)
+
+  Object.defineProperty(t, 'assert', {
+    get () {
+      return assertTestContext
+    }
+  })
+
+  return /** @type {TSPLTestContext} */ (/** @type {*} */(t))
 }
 
 module.exports = tspl

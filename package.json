@@ -5,6 +5,8 @@
   "main": "tspl.js",
   "types": "tspl.d.ts",
   "scripts": {
+    "build:types": "npm run delete:types && tsc --project tsconfig.types.json",
+    "delete:types": "node -e \"import { rmSync } from 'fs'; try {rmSync('./index.d.ts'); } catch {} \"",
     "lint": "standard",
     "lint:fix": "standard --fix",
     "test": "npm run test:unit && npm run test:types",
@@ -22,11 +24,10 @@
     "url": "git+https://github.com/mcollina/tspl.git"
   },
   "license": "MIT",
-  "dependencies": {
-  },
   "devDependencies": {
     "@types/node": "^20.4.2",
     "standard": "^17.1.0",
-    "tsd": "^0.30.0"
+    "tsd": "^0.30.0",
+    "typescript": "^5.9.2"
   }
 }

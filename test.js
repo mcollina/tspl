@@ -10,6 +10,60 @@ test('simple test plan', async (t) => {
   end()
 })
 
+test('simple test plan with passing with providing done to tspl', (t, done) => {
+  const { strictEqual, end } = tspl(t, { done })
+  strictEqual(1, 1)
+  end()
+})
+
+test('simple test plan failing and providing done to tspl', () => {
+  const { strictEqual, end } = tspl({
+    after: () => {},
+    strictEqual: assert.strictEqual
+  }, { plan: 2 })
+  strictEqual(1, 1)
+
+  assert.throws(() => end(), new assert.AssertionError({
+    message: 'The plan was not completed',
+    operator: 'strictEqual',
+    actual: 1,
+    expected: 2
+  }))
+})
+
+test('simple test plan failing with not providing done to tspl', () => {
+  const { strictEqual, end } = tspl({
+    after: () => {},
+    strictEqual: assert.strictEqual
+  }, { plan: 2 })
+  strictEqual(1, 1)
+
+  assert.throws(() => end(), new assert.AssertionError({
+    message: 'The plan was not completed',
+    operator: 'strictEqual',
+    actual: 1,
+    expected: 2
+  }))
+})
+
+test('simple test plan failing with providing done to tspl', () => {
+  const testDone = (err) => {
+    assert.deepStrictEqual(err, new assert.AssertionError({
+      message: 'The plan was not completed',
+      operator: 'strictEqual',
+      actual: 1,
+      expected: 2
+    }))
+  }
+  const { strictEqual, end } = tspl({
+    after: () => {},
+    strictEqual: assert.strictEqual
+  }, { plan: 2, done: testDone })
+  strictEqual(1, 1)
+
+  end()
+})
+
 test('simple test plan failing', async (t) => {
   let _fn
   tspl({
@@ -89,6 +143,21 @@ test('await plan', async (t) => {
 
   setImmediate(() => {
     plan.strictEqual(1, 1)
+  })
+
+  await plan
+})
+
+test('t.assert is the same as assert', async (t) => {
+  t = tspl(t, { plan: 1 })
+  t.assert.strictEqual(1, 1)
+})
+
+test('use t.assert and await plan', async (t) => {
+  const plan = tspl(t, { plan: 1 })
+
+  setImmediate(() => {
+    plan.assert.strictEqual(1, 1)
   })
 
   await plan

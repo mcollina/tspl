@@ -29,3 +29,11 @@ test('tspl', (t) => {
 
   expectType<void>(p.end());
 });
+
+test('tspl', (t) => {
+  const p: Plan = tspl(t);
+
+  p.assert.strictEqual(1, 1);
+
+  expectType<void>(p.end());
+});
