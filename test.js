@@ -172,3 +172,183 @@ test('it is possible to override the configure plan by calling .plan()', async (
 
   await t.completed
 })
+
+test('it is possible to configure wait on initialization - true', async (t) => {
+  let _fn
+  const plan = tspl({
+    after (fn) {
+      _fn = fn
+    }
+  }, { plan: 1, wait: true })
+
+  setTimeout(() => {
+    plan.assert.strictEqual(1, 1)
+  }, 100)
+
+  await _fn()
+})
+
+test('it is possible to configure wait on initialization - false and pass', async (t) => {
+  let _fn
+  const plan = tspl({
+    after (fn) {
+      _fn = fn
+    }
+  }, { plan: 1, wait: false })
+
+  plan.assert.strictEqual(1, 1)
+
+  await _fn()
+})
+
+test('it is possible to configure wait on initialization - false and fail', async (t) => {
+  let _fn
+  const plan = tspl({
+    after (fn) {
+      _fn = fn
+    }
+  }, { plan: 2, wait: false })
+
+  plan.strictEqual(1, 1)
+  setTimeout(() => {
+    plan.assert.strictEqual(1, 1)
+  }, 20)
+
+  await assert.rejects(_fn, new assert.AssertionError({
+    message: 'The plan was not completed',
+    operator: 'strictEqual',
+    actual: 1,
+    expected: 2
+  }))
+})
+
+test('it is possible to configure wait on initialization - number and pass', async (t) => {
+  let _fn
+  const plan = tspl({
+    after (fn) {
+      _fn = fn
+    }
+  }, { plan: 2, wait: 20 })
+
+  plan.strictEqual(1, 1)
+  setTimeout(() => {
+    plan.assert.strictEqual(1, 1)
+  }, 10)
+
+  await _fn()
+})
+
+test('it is possible to configure wait on initialization - number and fail', async (t) => {
+  let _fn
+  const plan = tspl({
+    after (fn) {
+      _fn = fn
+    }
+  }, { plan: 2, wait: 10 })
+
+  plan.strictEqual(1, 1)
+  setTimeout(() => {
+    plan.assert.strictEqual(1, 1)
+  }, 20)
+
+  await assert.rejects(_fn, new assert.AssertionError({
+    message: 'The plan was not completed',
+    operator: 'strictEqual',
+    actual: 1,
+    expected: 2
+  }))
+})
+
+test('it is possible to configure wait via t.plan - true', async (t) => {
+  let _fn
+  const plan = tspl({
+    after (fn) {
+      _fn = fn
+    }
+  })
+
+  plan.plan(1, { wait: true })
+  setTimeout(() => {
+    plan.assert.strictEqual(1, 1)
+  }, 100)
+
+  await _fn()
+})
+
+test('it is possible to configure wait via t.plan - false and pass', async (t) => {
+  let _fn
+  const plan = tspl({
+    after (fn) {
+      _fn = fn
+    }
+  })
+
+  plan.plan(1, { wait: false })
+  plan.assert.strictEqual(1, 1)
+
+  await _fn()
+})
+
+test('it is possible to configure wait via t.plan - false and fail', async (t) => {
+  let _fn
+  const plan = tspl({
+    after (fn) {
+      _fn = fn
+    }
+  })
+
+  plan.plan(2, { wait: false })
+
+  plan.strictEqual(1, 1)
+  setTimeout(() => {
+    plan.assert.strictEqual(1, 1)
+  }, 20)
+
+  await assert.rejects(_fn, new assert.AssertionError({
+    message: 'The plan was not completed',
+    operator: 'strictEqual',
+    actual: 1,
+    expected: 2
+  }))
+})
+
+test('it is possible to configure wait via t.plan - number and pass', async (t) => {
+  let _fn
+  const plan = tspl({
+    after (fn) {
+      _fn = fn
+    }
+  })
+
+  plan.plan(2, { wait: 20 })
+
+  plan.strictEqual(1, 1)
+  setTimeout(() => {
+    plan.assert.strictEqual(1, 1)
+  }, 10)
+
+  await _fn()
+})
+
+test('it is possible to configure wait via t.plan - number and fail', async (t) => {
+  let _fn
+  const plan = tspl({
+    after (fn) {
+      _fn = fn
+    }
+  })
+
+  plan.plan(2, { wait: 10 })
+
+  plan.strictEqual(1, 1)
+  setTimeout(() => {
+    plan.assert.strictEqual(1, 1)
+  }, 20)
+
+  await assert.rejects(_fn, new assert.AssertionError({
+    message: 'The plan was not completed',
+    operator: 'strictEqual',
+    actual: 1,
+    expected: 2
+  }))
+})

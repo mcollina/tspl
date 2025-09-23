@@ -11,6 +11,7 @@ const assert = require('node:assert')
 /**
  * @typedef {object} Options
  * @property {number} [plan] - number of expected assertions
+ * @property {boolean|number} [wait=false] - wait time in milliseconds before automatically ending the test
  * @property {(err?: Error) => void} [done] - callback when the plan is completed
  */
 
@@ -30,14 +31,18 @@ function tspl (t, opts = {}) {
   }
 
   let ended = false
-  let {
-    plan,
-    done
-  } = opts
+
+  opts.plan = opts.plan || 0
+  opts.done = opts.done || undefined
+  opts.wait = opts.wait ?? false
+
   let actual = 0
 
-  t.plan = function (n) {
-    plan = n
+  t.plan = function (n, options = {}) {
+    opts.plan = n
+    if (options.wait) {
+      opts.wait = options.wait
+    }
     return t
   }
 
@@ -51,8 +56,14 @@ function tspl (t, opts = {}) {
       return
     }
 
-    if (plan) {
-      assert.strictEqual(actual, plan, t.name ? `The plan for '${t.name}' was not completed` : 'The plan was not completed')
+    if (opts.wait === true) {
+      return completed
+    } else if (typeof opts.wait === 'number' && opts.wait > 0) {
+      await new Promise((resolve) => setTimeout(resolve, /** @type {number} */ (opts.wait)))
+    }
+
+    if (opts.plan) {
+      assert.strictEqual(actual, opts.plan, t.name ? `The plan for '${t.name}' was not completed` : 'The plan was not completed')
     } else {
       assert.fail(t.name ? `The plan for '${t.name}' was not completed` : 'The plan was not completed')
     }
@@ -64,21 +75,21 @@ function tspl (t, opts = {}) {
     }
     ended = true
 
-    if (plan) {
+    if (opts.plan) {
       try {
-        assert.strictEqual(actual, plan, t.name ? `The plan for '${t.name}' was not completed` : 'The plan was not completed')
+        assert.strictEqual(actual, opts.plan, t.name ? `The plan for '${t.name}' was not completed` : 'The plan was not completed')
         _resolve()
-        done && done()
+        opts.done && opts.done()
       } catch (err) {
         _resolve()
-        if (done) {
-          done(err)
+        if (opts.done) {
+          opts.done(err)
         } else {
           throw err
         }
       }
     } else {
-      done && done()
+      opts.done && opts.done()
       _resolve()
     }
   }
@@ -109,7 +120,7 @@ function tspl (t, opts = {}) {
         actual++
         const result = assert[method](...args)
 
-        if (actual === plan) {
+        if (actual === opts.plan) {
           _resolve()
         }
 
