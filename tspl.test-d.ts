@@ -37,3 +37,17 @@ test('tspl', (t) => {
 
   expectType<void>(p.end());
 });
+
+test('tspl', async (t) => {
+  const p: Plan = tspl(t);
+
+  p.assert.strictEqual(1, 1);
+
+  await p
+});
+
+test('tspl', (t, done) => {
+  const p: Plan = tspl(t, { done });
+
+  p.assert.strictEqual(1, 1);
+});

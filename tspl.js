@@ -9,9 +9,15 @@ const assert = require('node:assert')
  */
 
 /** @typedef {import('node:test').TestContext} TestContext */
-/** @typedef {import('node:assert')} Assert */
+/** @typedef {Omit<import('node:assert'), 'AssertionError' | 'CallTracker' | 'strict'>} AssertFns */
 
-/** @typedef {TestContext & Omit<Assert, 'AssertionError' | 'CallTracker' | 'strict'> & {end: () => void, completed: Promise<void>}} TSPLTestContext */
+/**
+ * @typedef {object} TSPLContext
+ * @property {(err?: Error) => void} end - end the test and check the plan
+ * @property {Promise<void>} completed - promise that resolves when the plan is completed
+ */
+
+/** @typedef {TestContext & AssertFns & TSPLContext & PromiseLike<void>} TSPLTestContext */
 
 /** @typedef {TSPLTestContext} Plan */
 
